@@ -1,2 +1,0 @@
-characters/p7-A.png
-out/page-07.png

@@ -1,2 +1,0 @@
-characters/p8-A-yellow.png
-out/page-08.png
