@@ -51,8 +51,8 @@ MG_TAIL = 1.4                      # 영상이 끝난 뒤 그 장에 더 머무�
 MG_VOL = 0.8                       # 덱에 넣은 영상 소리 크기(80%)와 같게
 END_HOLD = 3.0                     # 말이 없는 끝 화면에 머무는 시간
 SPEAKER = '장이준'                 # 노트에 [발표자 이름]이 남아 있으면 읽을 이름
-# 장이 열린 뒤 말을 떼기까지(초): 표지, 2쪽(통화 소리가 끝나고 문장이 뜨기 시작한 뒤. 소리를 넣기 전에는 1.2초)
-LEADS = {'cover': 1.0, 'in02': 1.2 + (CS.QUOTE_MS - CS.QUOTE_WAS) / 1000}
+# 장이 열린 뒤 말을 떼기까지(초): 표지, 2쪽(문장이 뜨기 시작하고 통화 소리도 끝난 뒤: call_sound.LEAD. 소리를 넣기 전에는 1.2초)
+LEADS = {'cover': 1.0, 'in02': CS.LEAD}
 MARK_RGB = ['FF00FF', '00FFFF', '00FF00']               # 구간 표 색(차례로 번갈아). 영상에서 덮어 지움
 MARK_BOX = HW.MARK_BOX
 FONT = Path.home() / '.cache' / 'weave-tools' / 'fonts' / 'SamsungOneKorean-500.ttf'

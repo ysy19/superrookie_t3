@@ -21,6 +21,7 @@ import build as HW
 from ui import (BODY, ICON, INK, INK2, LAV, LAV2, LINE, LINE2, MUTE, PURPLE, PURPLE2, RED, RING, SUB, SHADOW_CARD, SHADOW_LIFT, SHADOW_SOFT,
                 C, P, R, T, Xf, caption, magnifier, numdot, spark_icon, star4_icon, thread, tw)
 
+import call_sound as CS
 import hook_layout as HL
 
 Slide, cue = HW.Slide, HW.cue
@@ -45,8 +46,7 @@ SURVEY_SRC = "* 스마트폰 내 개인 기록 탐색 및 재검색 행태에 �
 INTRO_NOTES = {
     'cover': ('(화면: 흩어진 기억을 엮어, 지금을 완성하다 — Weave Assist)\n'
               '안녕하세요. 흩어진 기억을 엮어 지금을 완성하는 온디바이스 AI, Weave Assist 발표를 맡은 장이준입니다.'),
-    'in02': ('(장이 열리면 통화 연결음이 울리고, 상대가 받으면 통화 중 00:48 표시가 뜹니다. 상대가 "안녕하세요, 위브 프로님~!" (알아들을 수 없게 뭉개진 말) "알려주실 수 있나요~?"라고 말하고 나면 '
-             '"잠깐만요, 찾아보고 다시 알려 드릴게요." 문장이 한 글자씩 나타납니다. 장이 열린 뒤 14초쯤, 문장이 다 뜰 때까지 기다립니다. 클릭 없음)\n'
+    'in02': (CS.STAGE + '\n'                        # 무대 지시는 통화 소리의 판(call_sound.VERSION)에 따라
              "'잠깐만요, 찾아보고 다시 알려 드릴게요.' 여러분, 통화하다가 이런 말 해 보신 적 없으신가요?\n"
              '분명히 내 휴대폰 어딘가에 기록해 두었는데, 바로 찾지는 못할 때 나오는 말입니다.'),
     'in03': ('(장이 열리면 옅은 기록 조각만 떠다닙니다. 인물은 아직 없습니다.)\n'
