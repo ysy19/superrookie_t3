@@ -21,6 +21,10 @@
 - `intro/aura-1.png`, `intro/aura-2.png`, `intro/aura-3.png`: 3~5쪽 인물 뒤에 까는 옅은 보라 그라데이션이에요(7차). 팀원 덱 5쪽의 인물 그림 셋에서 윤곽(투명도)만 읽어 크게 흐린 그림이고, `tools/intro_assets.py --aura`가 만들어요.
 - `intro/blur_link.jpg`: 4차까지 13쪽 배경으로 쓰던 그림이에요(우리가 그린 12쪽을 흐리게 함, `tools/intro_assets.py --blur`). 5차부터 13쪽은 팀원이 손본 덱의 장을 그대로 옮겨서, 배경도 그 덱의 것이에요.
 
+## 2쪽의 통화 소리 (`intro/call_intro.wav`)
+
+`call_sound.py`가 만든 소리예요(받아 온 음원 없음). 통화 연결음(440 + 480 Hz)과 받는 소리는 합성했고, 상대의 말소리는 Supertonic 3(Supertone이 공개한 온디바이스 음성 합성, 목소리 M4)으로 세 토막을 한 문장으로 이어 읽혔어요. "안녕하세요, 위브 프로님~!"과 "알려주실 수 있나요~?"는 또렷하게 두고, 그 사이의 뜻이 없는 말은 0.09초 조각마다 앞뒤를 뒤집고 500 Hz 위를 깊게 덜어 내 무슨 말인지 모르게 뭉갰어요(울림은 더하지 않음). Supertonic 3의 라이선스는 Hugging Face Supertone/supertonic-3에 있어요.
+
 ## 연표의 NPU 아이콘 (`outro/ic-npu.png`)
 
 `src/icons.html`에 그린 선 그림이에요. 아웃트로 덱의 다른 아이콘(`outro/ic-*.png`)과 같은 규격(24칸 격자, 굵기 2)이고, Lucide의 cpu 아이콘(ISC 라이선스) 모양을 따랐어요.

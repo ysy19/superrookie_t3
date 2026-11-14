@@ -33,6 +33,7 @@ from PIL import Image, ImageDraw, ImageFont
 from pptx import Presentation
 
 import make as MK
+import call_sound as CS
 
 HW, F, N = MK.HW, MK.F, MK.N
 import render_c  # noqa: E402
@@ -50,7 +51,8 @@ MG_TAIL = 1.4                      # 영상이 끝난 뒤 그 장에 더 머무�
 MG_VOL = 0.8                       # 덱에 넣은 영상 소리 크기(80%)와 같게
 END_HOLD = 3.0                     # 말이 없는 끝 화면에 머무는 시간
 SPEAKER = '장이준'                 # 노트에 [발표자 이름]이 남아 있으면 읽을 이름
-LEADS = {'cover': 1.0, 'in02': 1.2}                     # 장이 열린 뒤 말을 떼기까지(초): 표지, 2쪽(문장이 다 뜬 뒤)
+# 장이 열린 뒤 말을 떼기까지(초): 표지, 2쪽(통화 소리가 끝나고 문장이 뜨기 시작한 뒤. 소리를 넣기 전에는 1.2초)
+LEADS = {'cover': 1.0, 'in02': 1.2 + (CS.QUOTE_MS - CS.QUOTE_WAS) / 1000}
 MARK_RGB = ['FF00FF', '00FFFF', '00FF00']               # 구간 표 색(차례로 번갈아). 영상에서 덮어 지움
 MARK_BOX = HW.MARK_BOX
 FONT = Path.home() / '.cache' / 'weave-tools' / 'fonts' / 'SamsungOneKorean-500.ttf'
@@ -366,6 +368,7 @@ def finish(silent, mp4, plan, clips, tail=1.0):
         fc = ['[0:v]fps=30,tpad=stop_mode=clone:stop_duration=%.2f[v0]' % more]
     last = 'v0'
     audio = '[1:a]volume=%.2fdB,alimiter=limit=0.75:attack=3:release=40:level=false:latency=true,aformat=channel_layouts=stereo:sample_rates=44100[va]' % gain
+    tracks = ['va']
     mgs = [(p, s) for p, s in zip(plan, starts) if p['kind'] == 'video']
     if mgs:
         p, s = mgs[0]
@@ -377,11 +380,15 @@ def finish(silent, mp4, plan, clips, tail=1.0):
         fc += ['[3:v]fps=30,scale=1920:1080:flags=lanczos,tpad=stop_mode=clone:stop_duration=%.2f,setpts=PTS-STARTPTS+%.3f/TB[mg]' % (MG_TAIL, t0),
                "[v0][mg]overlay=0:0:enable='between(t,%.3f,%.3f)':eof_action=pass[v1]" % (t0, t1)]
         last = 'v1'
-        audio += (';[3:a]volume=%.2f,adelay=%d|%d,aformat=channel_layouts=stereo:sample_rates=44100[ma]'
-                  ';[va][ma]amix=inputs=2:normalize=0:duration=longest[au]') % (MG_VOL, round(t0 * 1000), round(t0 * 1000))
+        audio += ';[3:a]volume=%.2f,adelay=%d|%d,aformat=channel_layouts=stereo:sample_rates=44100[ma]' % (MG_VOL, round(t0 * 1000), round(t0 * 1000))
+        tracks.append('ma')
         p['video_at'] = t0
-    else:
-        audio += ';[va]anull[au]'
+    for cp, cs in zip(plan, starts):                        # 2쪽의 통화 소리: 덱에서처럼 장이 열린 때부터
+        if cp['key'] == 'in02' and CS.WAV.exists():
+            ins += ['-i', str(CS.WAV)]
+            audio += ';[%d:a]aformat=channel_layouts=stereo:sample_rates=44100,volume=%.2f,adelay=%d:all=1[call]' % (ins.count('-i') - 1, CS.VOL, round(cs * 1000))
+            tracks.append('call')
+    audio += ';' + ''.join('[%s]' % t for t in tracks) + ('amix=inputs=%d:normalize=0:duration=longest[au]' % len(tracks) if len(tracks) > 1 else 'anull[au]')
     fc += ['[%s]split[a][b];[b]crop=%d:%d:0:%d[p];[a][p]overlay=0:%d[v2]' % (last, W, H, Y - H - 2, Y),
            '[2:v]fps=30,format=rgba[sub]', '[v2][sub]overlay=0:%d:eof_action=pass[v]' % (1065 - SUB_H), audio]
     subprocess.run([FFMPEG, '-y', '-loglevel', 'error', *ins, '-filter_complex', ';'.join(fc), '-map', '[v]', '-map', '[au]', '-r', '30',

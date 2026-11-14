@@ -19,6 +19,7 @@
 | --- | --- | --- |
 | 1 | 표지 | 우리 중간본의 표지. 영상은 표지 영상 v9(`../10_표지영상`, 18초)로 바꾸고 제목을 48pt로 줄임 |
 | 2~5 | 인트로 | 팀원이 손본 덱(jjun-0824/t3 87bf80b)의 2~5쪽. 3쪽의 첫 인물과 말풍선은 클릭해야 뜨고(`patch_person_click`), 3~5쪽의 옅은 기록 조각은 세 층으로 떠다녀요(`patch_floats`). 인물 뒤에는 옅은 보라 그라데이션(`patch_aura`). 4·5쪽의 둘째 말풍선은 '정확한 이름이 뭐였지?'(`patch_ask2`) |
+| 2 | 통화 소리 | 11월 14일에 넣음. 장이 열리면 통화 연결음이 울리고, 상대가 받으면 '통화 중' 표시가 뜨고, 상대의 말("안녕하세요, 위브 프로님~!" → 무슨 말인지 모르게 뭉갠 말 → "알려주실 수 있나요~?")이 끝나면 문장이 떠요(`call_sound.py`의 `patch`). 소리는 그 파일이 만든 `assets/intro/call_intro.wav`(11.6초). 상대의 목소리는 Supertonic 3(목소리 M4)으로 만들어서, 소리를 다시 만들려면 `../09_HowItWorks/장표5_claude/README.md`의 낭독 준비가 필요해요 |
 | 6 | 수많은 기록 | 새로 그림(`slides_new.py`의 `s_hook`) |
 | 7~11 | 설문 두 장, 기록을 남기는 곳, AI에게 묻는데, 정작 내 기록은 | 팀원이 손본 덱의 7~11쪽(도형, 그림, 전환, 효과). 7쪽 머리글(`patch_heading7`), 9쪽 글자 크기(`patch_hub`), 10쪽 AI 답변(`patch_answer`: 8차에 16pt, 말풍선의 네 변 여백 20px) |
 | 12 | 기록 그림이 가운데로 | 8차에 나눈 장. 팀원 덱의 11쪽을 한 번 더 옮겨 물음을 빼고 기록 그림만 가운데에 둠(`patch_gather`) |
@@ -52,6 +53,7 @@
 ~/.cache/weave-tools/venv/bin/python tools/intro_assets.py  # 3~5쪽의 기록 조각(한 장과 세 층), 연표의 NPU 아이콘 (assets/src → assets/intro, assets/outro)
 ~/.cache/weave-tools/venv/bin/python -I tools/intro_assets.py --aura   # 3~5쪽 인물 뒤의 옅은 보라 그라데이션 (팀원 덱의 인물 윤곽 → assets/intro/aura-N.png)
 ~/.cache/weave-tools/venv/bin/python make.py --png          # 덱 + out/png (PowerPoint로 렌더)
+python call_sound.py                                        # 2쪽의 통화 소리를 다시 만들어(Supertonic 3 환경 필요) 지금 덱에 바로 넣기(원본 덱 없이도 됨. make.py도 같은 patch를 부름)
 ~/.cache/weave-tools/venv/bin/python talk.py                # 낭독 → 덱 → 녹화 → 낭독, 자막, 모션그래픽 소리를 얹은 영상
 ~/.cache/weave-tools/venv/bin/python doc.py                 # 대본.md
 ~/.cache/weave-tools/venv/bin/python tools/overview.py      # 한눈에.jpg

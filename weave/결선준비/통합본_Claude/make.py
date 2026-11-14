@@ -46,6 +46,7 @@ import samsung_fonts  # noqa: E402
 from ui import P, Painter  # noqa: E402
 
 import foreign as F  # noqa: E402
+import call_sound as CS  # noqa: E402  (2쪽의 통화 소리)
 
 OUT = Path(__file__).resolve().parent / 'out'
 OUT.mkdir(exist_ok=True)
@@ -596,6 +597,7 @@ def patch_logo_center(sl):
 # 옮겨 온 덱의 노트와 견주지 않는 장: 6차에 우리가 노트를 바꾼 장과, 8차에 발표자가 대본을 다시 쓴 장
 NOTE_OURS = {'in02', 'in03', 'in04', 'in05', 'in07', 'in08', 'hub2', 'in09', 'scat', 'gath', 'link', 'bridge'}
 INTRO_PATCH = {                                       # 옮겨 온 장마다 6차부터 더 손보는 일
+    'in02': [CS.patch],                               # 11-14: 통화 연결음과 상대의 말소리(call_sound.py)
     'in03': [patch_person_click, patch_floats, patch_aura], 'in04': [patch_floats, patch_aura], 'in05': [patch_floats, patch_aura],
     'in07': [patch_heading7], 'hub2': [patch_hub], 'in09': [patch_answer], 'gath': [patch_gather], 'bridge': [patch_logo_center],
 }
